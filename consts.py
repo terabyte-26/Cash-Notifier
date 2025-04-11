@@ -20,3 +20,22 @@ class URLs(object):
     STAKE_GRAPHQL_URL: str = f"{STAKE_BASE_URL}/_api/graphql"
 
     CHROME_DEV_TOOLS_URL: str = "http://localhost:9222"
+
+
+class Consts(object):
+
+    class Telegram(object):
+
+        BOT_TOKEN: str = '7765386982:AAHK1WktL4DrwFVOfCkuOXMrGiJDs_VUox0'
+        OWNER_ID: int = 1752221538
+
+
+class Temp(object):
+    """
+    Temporary variables used in the project
+    """
+
+    LAST_JSON_DATA: None | dict = None
+
+
+
