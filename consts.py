@@ -28,6 +28,7 @@ class Consts(object):
 
         BOT_TOKEN: str = '7765386982:AAHK1WktL4DrwFVOfCkuOXMrGiJDs_VUox0'
         OWNER_ID: int = 1752221538
+        MANOHAR_ID: int = 5958426402
 
 
 class Temp(object):

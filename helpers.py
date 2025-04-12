@@ -3,8 +3,10 @@
 # Contact Us: https://terabyte-26.com/quick-links/
 # Telegram: @hamza_farahat or https://t.me/hamza_farahat
 # WhatsApp: +212772177012
-import json
 
+
+import json
+import time
 import requests
 
 from consts import Consts, Temp
@@ -17,7 +19,11 @@ async def handle_response(response):
         content_type = response.headers.get("content-type", "")
         if ("application/json" in content_type or "text" in content_type) and (response.url == 'https://stake.com/_api/graphql'):
 
-            body_string: str = await response.text()
+            try:
+                body_string: str = await response.text()
+            except Exception as e:
+                print(f"Error reading response body from {response.url}: {e}")
+                raise e
 
             try:
                 parsed = json.loads(body_string)
@@ -29,7 +35,8 @@ async def handle_response(response):
                 Temp.LAST_JSON_DATA = parsed
                 # print(f"<<< Response: {response.status} {response.url}\nBody: {json.dumps(parsed, indent=4)}...\n")
     except Exception as e:
-        print(f"Error reading response body from {response.url}: {e}")
+        # print(f"Error reading response body from {response.url}: {e}")
+        pass
 
 
 def send_message(
@@ -65,7 +72,7 @@ def send_message(
         data['text'] = text
 
         url = f"https://api.telegram.org/bot{Consts.Telegram.BOT_TOKEN}/{method}"
-        resp = requests.post(url, data=data, timeout=3, verify=False)
+        resp = requests.post(url, data=data, timeout=3, verify=True)
 
         if resp.json()["ok"] is False:
             print(resp.json())
@@ -75,3 +82,12 @@ def send_message(
         print(f"An error occurred: {e}")
         pass
 
+
+def countdown(seconds):
+    while seconds:
+        mins, secs = divmod(seconds, 60)
+        timer = f'{mins:02d}:{secs:02d}'
+        print(f'\rCountdown: {timer}', end='', flush=True)
+        time.sleep(1)
+        seconds -= 1
+    print('\rCountdown: 00:00\nDone!       ')
