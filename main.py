@@ -6,21 +6,16 @@
 
 
 import asyncio
-import time
-from datetime import datetime
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
-from consts import HtmlElements, URLs, Consts, Temp
+from consts import HtmlElements, URLs, Consts, Temp, Configs
+from helpers import send_message, handle_response, countdown
 from colorama import init, Fore, Style
+from datetime import datetime
 
-from helpers import send_message, handle_response
 
 # Initialize colorama (important for Windows)
 init(autoreset=True)
-
-
-POINT_THRESHOLD: float | int = 2  # Fail (below 2)
-HOW_MANY: int = 7                 # 7 Values need to be below the threshold
 
 
 async def main():
@@ -98,7 +93,7 @@ async def main():
                     start_time: str = dt.strftime('%H:%M:%S')
 
                     # Choose color based on crash point
-                    if cash_point and float(cash_point) < POINT_THRESHOLD:
+                    if cash_point and float(cash_point) < Configs.POINT_THRESHOLD:
                         counter_values_above_threshold += 1
                         color = Fore.LIGHTRED_EX
                         message_text += f"<b><u>{start_time} --> <code>{cash_point:.3f}</code></u></b>\n"
@@ -108,9 +103,9 @@ async def main():
 
                     print(f"{color}Start Time: {start_time}  -->  Cash Point: {cash_point:.3f}{Style.RESET_ALL}")
 
-                print(f"\n{Fore.CYAN}Total games with cash point below {POINT_THRESHOLD}: {counter_values_above_threshold}{Style.RESET_ALL}")
+                print(f"\n{Fore.CYAN}Total games with cash point below {Configs.POINT_THRESHOLD}: {counter_values_above_threshold}{Style.RESET_ALL}")
 
-                if counter_values_above_threshold >= HOW_MANY:
+                if counter_values_above_threshold >= Configs.HOW_MANY:
 
                     print("Sending message to Telegram...")
 
@@ -122,7 +117,7 @@ async def main():
                     for chat_id in chats_list:
                         send_message(
                             chat_id=chat_id,
-                            text=f"Crash game list with cash point below {POINT_THRESHOLD} within {HOW_MANY}:\n\n{message_text}",
+                            text=f"Crash game list with cash point below {Configs.POINT_THRESHOLD} within {Configs.HOW_MANY}:\n\n{message_text}",
                             silent=False
                         )
 
@@ -152,5 +147,5 @@ if __name__ == "__main__":
             print(f"{Fore.RED}Please check the logs for more details.{Style.RESET_ALL}")
         finally:
             print(f"{Fore.GREEN}Waiting for 5 seconds before restarting...{Style.RESET_ALL}")
-            time.sleep(10)
+            countdown(Configs.SLEEP_TIME)
 

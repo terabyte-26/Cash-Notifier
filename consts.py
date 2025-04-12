@@ -39,4 +39,11 @@ class Temp(object):
     LAST_JSON_DATA: None | dict = None
 
 
+class Configs(object):
+
+    SLEEP_TIME: int = 300             # 5 minutes
+    POINT_THRESHOLD: float | int = 2  # Fail (greater than 2)
+    HOW_MANY: int = 7                 # 7 Values need to be below the threshold
+
+
 

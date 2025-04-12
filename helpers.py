@@ -87,7 +87,7 @@ def countdown(seconds):
     while seconds:
         mins, secs = divmod(seconds, 60)
         timer = f'{mins:02d}:{secs:02d}'
-        print(f'\rCountdown: {timer}', end='', flush=True)
+        print(f'\rRemaining Time: {timer}', end='', flush=True)
         time.sleep(1)
         seconds -= 1
     print('\rCountdown: 00:00\nDone!       ')
