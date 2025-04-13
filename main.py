@@ -151,6 +151,6 @@ if __name__ == "__main__":
             print(f"{Fore.RED}An error occurred: {Style.RESET_ALL}")
             print(f"{Fore.RED}Please check the logs for more details.{Style.RESET_ALL}")
         finally:
-            print(f"{Fore.GREEN}Waiting for 5 seconds before restarting...{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Waiting for {Configs.SLEEP_TIME} seconds ({Configs.SLEEP_TIME / 60}minutes) before restarting...{Style.RESET_ALL}")
             countdown(Configs.SLEEP_TIME)
 
