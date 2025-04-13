@@ -37,6 +37,7 @@ class Temp(object):
     """
 
     LAST_JSON_DATA: None | dict = None
+    PREVIOUS_MIDDLE_ID: None | str = None
 
 
 class Configs(object):

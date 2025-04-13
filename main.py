@@ -85,6 +85,17 @@ async def main():
             # Check if the list is not empty
             if len(cash_game_list):
 
+                middle_id: str = cash_game_list[0].get("id")
+                print(f"Middle ID: {middle_id}")
+
+                if Temp.PREVIOUS_MIDDLE_ID is not None and middle_id == Temp.PREVIOUS_MIDDLE_ID:
+                    print(f"{Fore.LIGHTRED_EX} [MAIN] No new data received. Exiting...{Style.RESET_ALL}")
+                    await page.close()
+                    return
+
+                else:
+                    Temp.PREVIOUS_MIDDLE_ID = middle_id
+
                 counter_values_above_threshold: int = 0
                 message_text: str = ""
 
@@ -151,6 +162,6 @@ if __name__ == "__main__":
             print(f"{Fore.RED}An error occurred: {Style.RESET_ALL}")
             print(f"{Fore.RED}Please check the logs for more details.{Style.RESET_ALL}")
         finally:
-            print(f"{Fore.GREEN}Waiting for {Configs.SLEEP_TIME} seconds ({Configs.SLEEP_TIME / 60}minutes) before restarting...{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}Waiting for {Configs.SLEEP_TIME} seconds ({Configs.SLEEP_TIME // 60} minutes) before restarting...{Style.RESET_ALL}")
             countdown(Configs.SLEEP_TIME)
 
