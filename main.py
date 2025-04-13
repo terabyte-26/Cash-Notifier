@@ -74,6 +74,11 @@ async def main():
             while Temp.LAST_JSON_DATA is None:
                 await asyncio.sleep(.2)
 
+            # Check if Temp.LAST_JSON_DATA it contain a valid JSON
+            if Temp.LAST_JSON_DATA is None:
+                print("Temp.LAST_JSON_DATA is None")
+                raise ValueError("Temp.LAST_JSON_DATA is None")
+
             # Get the crash game list from the JSON data
             cash_game_list: list[dict] = Temp.LAST_JSON_DATA.get("data", {}).get("crashGameList", [])
 
