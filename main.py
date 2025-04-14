@@ -82,6 +82,9 @@ async def main():
             # Get the crash game list from the JSON data
             cash_game_list: list[dict] = Temp.LAST_JSON_DATA.get("data", {}).get("crashGameList", [])
 
+            # Reset the Temp.LAST_JSON_DATA to None
+            Temp.LAST_JSON_DATA = None
+
             # Check if the list is not empty
             if len(cash_game_list):
 
@@ -97,7 +100,7 @@ async def main():
                     Temp.PREVIOUS_MIDDLE_ID = middle_id
 
                 counter_values_above_threshold: int = 0
-                message_text: str = ""
+                list_as_string: str = ""
 
                 for game in cash_game_list:
 
@@ -112,14 +115,14 @@ async def main():
                     if cash_point and float(cash_point) < Configs.POINT_THRESHOLD:
                         counter_values_above_threshold += 1
                         color = Fore.LIGHTRED_EX
-                        message_text += f"<b><u>{start_time} --> <code>{cash_point:.3f}</code></u></b>\n"
+                        list_as_string += f"<b>{start_time}</b> --> <code>{cash_point:.3f}</code> ❌\n"
                     else:
                         color = Fore.LIGHTYELLOW_EX
-                        message_text += f"{start_time} --> <code>{cash_point:.3f}</code>\n"
+                        list_as_string += f"<b>{start_time}</b> --> <code>{cash_point:.3f}</code> ✅\n"
 
                     print(f"{color}Start Time: {start_time}  -->  Cash Point: {cash_point:.3f}{Style.RESET_ALL}")
 
-                print(f"\n{Fore.CYAN}Total games with cash point below {Configs.POINT_THRESHOLD}: {counter_values_above_threshold}{Style.RESET_ALL}")
+                print(f"\n{Fore.CYAN}More than {Configs.HOW_MANY} out of the last 10 cash points were below {Configs.POINT_THRESHOLD}: {counter_values_above_threshold}{Style.RESET_ALL}")
 
                 if counter_values_above_threshold >= Configs.HOW_MANY:
 
@@ -127,13 +130,16 @@ async def main():
 
                     chats_list = [
                         Consts.Telegram.OWNER_ID,
-                        # Consts.Telegram.MANOHAR_ID
+                        Consts.Telegram.MANOHAR_ID
                     ]
+
+                    more_than_chunk_string: str = "More than " if counter_values_above_threshold > Configs.HOW_MANY else ""
+                    message_text: str = f"{more_than_chunk_string}{Configs.HOW_MANY} out of the last 10 cash points were below {Configs.POINT_THRESHOLD}:\n\n{list_as_string}"
 
                     for chat_id in chats_list:
                         send_message(
                             chat_id=chat_id,
-                            text=f"Crash game list with cash point below {Configs.POINT_THRESHOLD} within {Configs.HOW_MANY}:\n\n{message_text}",
+                            text=message_text,
                             silent=False
                         )
 
