@@ -6,6 +6,7 @@
 
 
 import asyncio
+import time
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
 from consts import HtmlElements, URLs, Consts, Temp, Configs
@@ -71,7 +72,14 @@ async def main():
 
             print("Waiting for the crash game to load...")
             # Wait for the crash game to load
+            timeout_start: float = time.time()
+
             while Temp.LAST_JSON_DATA is None:
+                if time.time() - timeout_start > 20:
+                    print("Timeout: Crash game did not load in 20 seconds.")
+                    await page.close()
+                    break
+
                 await asyncio.sleep(.2)
 
             # Check if Temp.LAST_JSON_DATA it contain a valid JSON
